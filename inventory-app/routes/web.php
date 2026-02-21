@@ -13,7 +13,7 @@ use App\Http\Controllers\UserProfileController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
 /*

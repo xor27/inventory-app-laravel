@@ -42,8 +42,15 @@
 
                         <div class="card-body d-flex flex-column">
 
-                            {{-- NAME --}}
-                            <h5 class="card-title">
+                            {{-- CATEGORY BADGE --}}
+                            @if($product->category)
+                                <div class="text-primary fw-semibold mb-1" style="font-size: 13px;">
+                                    {{ $product->category->name }}
+                                </div>
+                            @endif
+
+                            {{-- PRODUCT NAME --}}
+                            <h5 class="card-title mt-1">
                                 {{ $product->name }}
                             </h5>
 

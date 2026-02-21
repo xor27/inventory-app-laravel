@@ -150,16 +150,25 @@
 
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up">
                                 <div class="message-body">
-
-                                    {{-- ✅ FIX DI SINI --}}
+                                    {{-- USER: MY PROFILE BISA DIKLIK --}}
                                     @if(auth()->user()->role === 'user')
                                         <a href="{{ route('user.profile.edit') }}"
-                                           class="d-flex align-items-center gap-2 dropdown-item">
+                                            class="d-flex align-items-center gap-2 dropdown-item">
                                             <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">Edit Profile</p>
+                                            <p class="mb-0 fs-3">My Profile</p>
                                         </a>
                                     @endif
-
+                                    
+                                    {{-- ADMIN & STAFF: MY PROFILE TIDAK BISA DIKLIK --}}
+                                    @if(in_array(auth()->user()->role, ['admin', 'staff']))
+                                        <div class="d-flex align-items-center gap-2 dropdown-item text-muted"
+                                            style="cursor: not-allowed;">
+                                            <i class="ti ti-user fs-6"></i>
+                                            <p class="mb-0 fs-3">My Profile</p>
+                                        </div>
+                                    @endif
+                                    
+                                    {{-- LOGOUT (SEMUA ROLE) --}}
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit"
@@ -167,6 +176,7 @@
                                             Logout
                                         </button>
                                     </form>
+                                
                                 </div>
                             </div>
                         </li>
