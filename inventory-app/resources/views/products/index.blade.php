@@ -4,7 +4,8 @@
 <div class="card">
     <div class="card-body">
 
-        <div class="d-flex justify-content-between mb-3">
+        {{-- HEADER --}}
+        <div class="d-flex justify-content-between mb-4">
             <h4>Product List</h4>
 
             @if(auth()->user()->role === 'admin')
@@ -14,76 +15,90 @@
             @endif
         </div>
 
+        {{-- FLASH MESSAGE --}}
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
 
-        <table class="table table-bordered table-hover align-middle">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Image</th>
-                    <th>Nama</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
+        {{-- PRODUCT GRID --}}
+        <div class="row">
+            @foreach($products as $product)
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
 
-                    @if(auth()->user()->role === 'admin')
-                        <th width="180">Action</th>
-                    @endif
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach($products as $product)
-                <tr>
-                    <td>{{ $product->id }}</td>
-
-                    <td>
+                        {{-- IMAGE --}}
                         @if($product->image)
                             <img src="{{ asset('storage/'.$product->image) }}"
-                                 width="60" class="rounded">
+                                 class="card-img-top"
+                                 style="height:220px; object-fit:cover;">
                         @else
-                            -
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height:220px;">
+                                <span class="text-muted">No Image</span>
+                            </div>
                         @endif
-                    </td>
 
-                    <td>
-                        <a href="{{ route('products.show', $product) }}"
-                            class="text-primary fw-semibold">
-                            {{ $product->name }}
-                        </a>
-                    </td>
-                    <td>{{ $product->category->name ?? '-' }}</td>
-                    <td>Rp {{ number_format($product->price) }}</td>
-                    <td>{{ $product->stock }}</td>
+                        <div class="card-body d-flex flex-column">
 
-                    @if(auth()->user()->role === 'admin')
-                        <td>
-                            <a href="{{ route('products.edit', $product) }}"
-                               class="btn btn-sm btn-warning">
-                                Edit
-                            </a>
+                            {{-- NAME --}}
+                            <h5 class="card-title">
+                                {{ $product->name }}
+                            </h5>
 
-                            <form action="{{ route('products.destroy', $product) }}"
-                                  method="POST"
-                                  class="d-inline">
-                                @csrf
-                                @method('DELETE')
+                            {{-- PRICE --}}
+                            <p class="text-primary fw-bold mb-1">
+                                Rp {{ number_format($product->price) }}
+                            </p>
 
-                                <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Yakin hapus?')">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    @endif
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                            {{-- STOCK --}}
+                            <p class="text-muted mb-2">
+                                Jumlah Stock: {{ $product->stock }}
+                            </p>
+
+                            {{-- DESCRIPTION --}}
+                            <p class="text-muted small">
+                                {{ \Illuminate\Support\Str::limit($product->description, 80) }}
+                            </p>
+
+                            {{-- BUTTONS --}}
+                            <div class="mt-auto">
+
+                                {{-- DETAIL --}}
+                                <a href="{{ route('products.show', $product) }}"
+                                   class="btn btn-primary w-100 mb-2">
+                                    Read More
+                                </a>
+
+                                {{-- ADMIN ONLY --}}
+                                @if(auth()->user()->role === 'admin')
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('products.edit', $product) }}"
+                                           class="btn btn-warning w-50">
+                                            Edit
+                                        </a>
+
+                                        <form action="{{ route('products.destroy', $product) }}"
+                                              method="POST"
+                                              class="w-50">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button class="btn btn-danger w-100"
+                                                    onclick="return confirm('Yakin hapus product?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
 
     </div>
 </div>

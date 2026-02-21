@@ -54,4 +54,11 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')
             ->with('success', 'Category berhasil dihapus');
     }
+
+    public function show(Category $category)
+    {
+        $category->load('products');
+        
+        return view('categories.show', compact('category'));
+    }
 }
