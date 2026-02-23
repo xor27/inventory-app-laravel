@@ -13,7 +13,9 @@ use App\Http\Controllers\UserProfileController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 /*
